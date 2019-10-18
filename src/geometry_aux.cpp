@@ -188,6 +188,24 @@ assign_temperatures()
 //==============================================================================
 
 void
+assign_importances()
+{
+  for (auto& c : model::cells) {
+    // Ignore non-material cells and cells with defined temperature.
+    if (c->importance_.size() > 0) continue;
+
+
+    // Use the global default temperature.
+    c->importance_.push_back(
+            settings::importance_default);
+
+
+  }
+}
+
+//==============================================================================
+
+void
 get_temperatures(std::vector<std::vector<double>>& nuc_temps,
   std::vector<std::vector<double>>& thermal_temps)
 {

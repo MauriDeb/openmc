@@ -88,7 +88,7 @@ class Cell(IDManagerMixin):
     next_id = 1
     used_ids = set()
 
-    def __init__(self, cell_id=None, name='', fill=None, region=None):
+    def __init__(self, cell_id=None, name='', fill=None, region=None, importance= 1.0):
         # Initialize Cell class attributes
         self.id = cell_id
         self.name = name
@@ -97,6 +97,7 @@ class Cell(IDManagerMixin):
         self._rotation = None
         self._rotation_matrix = None
         self._temperature = None
+        self._importance = importance
         self._translation = None
         self._paths = None
         self._num_instances = None
@@ -129,6 +130,9 @@ class Cell(IDManagerMixin):
         if self.fill_type == 'material':
             string += '\t{0: <15}=\t{1}\n'.format('Temperature',
                                                   self.temperature)
+        if self.fill_type == 'material':
+            string += '\t{0: <15}=\t{1}\n'.format('Importance',
+                                                  self.importance)        
         string += '{: <16}=\t{}\n'.format('\tTranslation', self.translation)
 
         return string
@@ -169,6 +173,10 @@ class Cell(IDManagerMixin):
     @property
     def temperature(self):
         return self._temperature
+    
+    @property
+    def importance(self):
+        return self._importance
 
     @property
     def translation(self):
@@ -268,6 +276,14 @@ class Cell(IDManagerMixin):
                     c._temperature = temperature
         else:
             self._temperature = temperature
+            
+    @importance.setter
+    def temperature(self, importance):
+        # Make sure importances are positive
+        cv.check_type('cell importance', importance, Real)
+
+        cv.check_greater_than('cell importance', importance, 0.0, True)
+        self._importance = importance
 
     @region.setter
     def region(self, region):
@@ -511,6 +527,9 @@ class Cell(IDManagerMixin):
                     str(t) for t in self.temperature))
             else:
                 element.set("temperature", str(self.temperature))
+                
+        if self.importance is not None:
+            element.set("importance", str(self.importance))
 
         if self.translation is not None:
             element.set("translation", ' '.join(map(str, self.translation)))
@@ -576,6 +595,12 @@ class Cell(IDManagerMixin):
             if value is not None:
                 setattr(c, key, [float(x) for x in value.split()])
 
+        # Check for other attributes
+        imp = get_text(elem, 'importance')
+        if imp is not None:
+            c.importance = float(imp)
+           
+                
         # Add this cell to appropriate universe
         univ_id = int(get_text(elem, 'universe', 0))
         get_universe(univ_id).add_cell(c)
