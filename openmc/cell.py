@@ -278,7 +278,7 @@ class Cell(IDManagerMixin):
             self._temperature = temperature
             
     @importance.setter
-    def temperature(self, importance):
+    def importance(self, importance):
         # Make sure importances are positive
         cv.check_type('cell importance', importance, Real)
 
