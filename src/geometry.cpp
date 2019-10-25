@@ -169,6 +169,9 @@ find_cell_inner(Particle* p, const NeighborList* neighbor_list)
         p->sqrtkT_ = c.sqrtkT_[0];
       }
 
+      //! p es un puntero a una clase publica que se llama particle.
+      //! La clase particle tiene las funciones o propiedades de la particula
+      //! las cuales las accedo usando ->.
       p->imp_last_ = p->imp_ == -1 ? 1.0: p->imp_;
       if (c.importance_.size() > 1) {
         p->imp_ = c.importance_[p->cell_instance_];

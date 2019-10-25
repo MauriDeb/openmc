@@ -361,7 +361,11 @@ CSGCell::CSGCell(pugi::xml_node cell_node)
     }
   }
 
-  // xxx Comentar
+  // Read the importances from .xml
+  // Primero busca el nodo que se llame "importance"
+  // y agrega al array importancia el valor obtenido. Se imprime la importancia de cada
+  // celda a medida que se va leyendo cada celda del .xml
+  // Por que es un array para la importancia?
   if (check_for_node(cell_node, "importance")) {
     importance_ = get_node_array<double>(cell_node, "importance");
     importance_.shrink_to_fit();
@@ -375,7 +379,7 @@ CSGCell::CSGCell(pugi::xml_node cell_node)
         fatal_error(err_msg);
       }
     }
-    std::cout<<"cell = "<<(id_)<<", importance = "<<importance_[0]<<"\n";
+    std::cout<<"cell = "<<(id_)<<", name = "<<name_<<", importance = "<<importance_[0]<<"\n";
   }
 
 

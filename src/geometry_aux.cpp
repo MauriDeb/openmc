@@ -187,15 +187,17 @@ assign_temperatures()
 
 //==============================================================================
 
+// Asigno importancia default si es que no fue cargada(revisar, porque cell.py ya lo hace).
+
 void
 assign_importances()
 {
   for (auto& c : model::cells) {
-    // Ignore non-material cells and cells with defined temperature.
+    // Ignore non-material cells and cells with defined importance.
     if (c->importance_.size() > 0) continue;
 
 
-    // Use the global default temperature.
+    // Use the global default importance.
     c->importance_.push_back(
             settings::importance_default);
 

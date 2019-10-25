@@ -88,6 +88,10 @@ class Cell(IDManagerMixin):
     next_id = 1
     used_ids = set()
 
+
+    ##! Aca lo que hago es, primero poner por default a I= 1 y segundo poder poner la importancia
+    ##! como ej: pepito = openmc.Cell(bla, bla, importance= I), osea es una forma de settear I.
+
     def __init__(self, cell_id=None, name='', fill=None, region=None, importance= 1.0):
         # Initialize Cell class attributes
         self.id = cell_id
@@ -174,6 +178,8 @@ class Cell(IDManagerMixin):
     def temperature(self):
         return self._temperature
     
+    ##! Este es el getter de la importancia, es decir que pepito.importance
+    ##! me devuelve la importancia de la celda.
     @property
     def importance(self):
         return self._importance
@@ -276,7 +282,10 @@ class Cell(IDManagerMixin):
                     c._temperature = temperature
         else:
             self._temperature = temperature
-            
+
+    ##! Aca como se ve lo que hago es crear el setter viendo si es positivo I primero.
+    ##! Con esto puedo setear la importancia de una celda o cambiar una preexistente
+    ##! haciendo pepito.importance= I.
     @importance.setter
     def importance(self, importance):
         # Make sure importances are positive
