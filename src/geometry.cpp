@@ -169,25 +169,27 @@ find_cell_inner(Particle* p, const NeighborList* neighbor_list)
         p->sqrtkT_ = c.sqrtkT_[0];
       }
 
-      //! p es un puntero a una clase publica que se llama particle.
-      //! La clase particle tiene las funciones o propiedades de la particula
-      //! las cuales las accedo usando ->.
+      // p es un puntero a una clase publica que se llama particle.
+      // La clase particle tiene las funciones o propiedades de la particula
+      // las cuales las accedo usando ->.
       p->imp_last_ = p->imp_ == -1 ? 1.0: p->imp_;
       if (c.importance_.size() > 1) {
         p->imp_ = c.importance_[p->cell_instance_];
       } else {
         p->imp_ = c.importance_[0];
       }
-      russian_roulette(p);
+      russian_roulette_importance(p);
       if (p->imp_> p->imp_last_) {
         int32_t n;
         int32_t i;
         double_t prob;
 
-        std::cout << "Paso a una celda de mayor importancia: importance splitting\n";
-        std::cout << p->imp_ << ", " << p->imp_last_ << "\n";
+        //std::cout << "Paso a una celda de mayor importancia: importance splitting\n";
+        //std::cout << p->imp_ << ", " << p->imp_last_ << "\n";
         n = std::floor(p->imp_/p->imp_last_);
         prob = p->imp_/p->imp_last_ - n;
+        //std::cout<<"n es igual a: "<<n<<". p es igual a: "<<prob<<"\n";
+
 
         if (prn() < prob ) n++;
 
@@ -207,15 +209,15 @@ find_cell_inner(Particle* p, const NeighborList* neighbor_list)
         p->wgt_ = p->wgt_*p->imp_last_/p->imp_;
 
       } else{
-        std::cout << "Paso a una celda de menor importancia: Russian roulette\n";
+        //std::cout << "Paso a una celda de menor importancia: Russian roulette\n";
         if (prn() < p->imp_ / p->imp_last_) {
           p->wgt_last_ = p->wgt_;
           p->wgt_ = p->wgt_*p->imp_last_/p->imp_;
-          std::cout<<p->wgt_last_<<" -> "<<p->wgt_<<"\n";
+          //std::cout<<p->wgt_last_<<" -> "<<p->wgt_<<"\n";
         } else {
-          std::cout<<"It's dead, Jim\n";
+          //std::cout<<"It's dead, Jim\n";
           p->wgt_ = 0.;
-          p->wgt_last_ = 0.;if (simulation::secondary_bank.size() >= 10000)
+          p->wgt_last_ = 0.;
           p->alive_ = false;
         }
       }

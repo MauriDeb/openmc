@@ -23,4 +23,18 @@ void russian_roulette(Particle* p)
   }
 }
 
+void russian_roulette_importance(Particle* p)
+{
+  if (p->wgt_ < settings::weight_cutoff / p->imp_ ) {
+    if (prn() < p->wgt_ / settings::weight_survive) {
+      p->wgt_ = settings::weight_survive;
+      p->wgt_last_ = p->wgt_;
+    } else {
+      p->wgt_ = 0.;
+      p->wgt_last_ = 0.;
+      p->alive_ = false;
+    }
+  }
+}
+
 } //namespace openmc

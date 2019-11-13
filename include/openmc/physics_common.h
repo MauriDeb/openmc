@@ -12,5 +12,8 @@ namespace openmc {
 extern "C" void
 russian_roulette(Particle* p);
 
+extern "C" void
+russian_roulette_importance(Particle* p);
+
 } // namespace openmc
 #endif // OPENMC_PHYSICS_COMMON_H
